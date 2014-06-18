@@ -79,6 +79,15 @@ describe PayrollController do
       expect(controller.instance_eval { @payday }).to eq("friday")
     end
   end
+
+  context '#print_list_of_dates' do
+    it 'prints a list of dates' do
+      allow(controller).to receive(:puts) { anything() }
+      expect(controller).to receive(:puts).with("07/02/2014").and_call_original
+      expect(controller).to receive(:puts).with("08/02/2014").and_call_original
+      controller.send(:print_list_of_dates, ["07/02/2014", "08/02/2014"])
+    end
+  end
 end
 
 describe PayrollCalculator do
