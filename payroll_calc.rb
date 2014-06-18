@@ -1,3 +1,5 @@
+require 'date'
+
 class PayrollController
 
 end
