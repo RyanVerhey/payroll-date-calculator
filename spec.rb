@@ -15,6 +15,25 @@ describe PayrollController do
       controller.run
     end
   end
+
+  context '#get_start_date' do
+    it 'should reset if invalid date format is passed' do
+      expect(controller).to receive(:invalid_date_reset)
+      controller.send(:get_start_date, "07/02/14")
+    end
+    it 'should reset if invalid date is passed' do
+      expect(controller).to receive(:invalid_date_reset)
+      controller.send(:get_start_date, "07/33/2014")
+    end
+    it 'should save an inputted date' do
+      controller.send(:get_start_date, "07/02/2014")
+      expect(controller.instance_eval { @start_date }).to eq(Date.strptime("07/02/2014", '%m/%d/%Y'))
+    end
+    it 'should set the default date as today if no date given' do
+      controller.send(:get_start_date, "")
+      expect(controller.instance_eval { @start_date }).to eq(Date.today)
+    end
+  end
 end
 
 describe PayrollCalculator do
