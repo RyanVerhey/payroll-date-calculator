@@ -60,6 +60,25 @@ describe PayrollController do
       expect(controller.instance_eval { @pay_interval }).to eq("bi-weekly")
     end
   end
+
+  context '#get_payday' do
+    it 'should reset if invalid day of the week is given' do
+      expect(controller).to receive(:get_payday)
+      controller.send(:get_payday, "Not a day of the week")
+    end
+    it 'should save the day if a valid day of the week is given' do
+      controller.send(:get_payday, "Wednesday")
+      expect(controller.instance_eval { @payday }).to eq("wednesday")
+    end
+    it 'should accept valid days regardless od case' do
+      controller.send(:get_payday, "ThUrSdAy")
+      expect(controller.instance_eval { @payday }).to eq("thursday")
+    end
+    it 'should make Friday the default if no specific day is geven' do
+      controller.send(:get_payday, "")
+      expect(controller.instance_eval { @payday }).to eq("friday")
+    end
+  end
 end
 
 describe PayrollCalculator do
