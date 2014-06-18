@@ -1,4 +1,4 @@
-payroll-date-calculator
+Payroll Date Calculator
 =======================
 
-Payroll date calculator code challenge for Wowzers
+This is a script that calculates payroll dates for one year in the future. This is being done as a code challenge for Wowzers.
