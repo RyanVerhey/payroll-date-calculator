@@ -41,6 +41,25 @@ describe PayrollController do
       controller.send(:invalid_date_reset)
     end
   end
+
+  context '#get_pay_interval' do
+    it 'should reset if invalid interval is given' do
+      expect(controller).to receive(:get_pay_interval)
+      controller.send(:get_pay_interval, "Not an interval")
+    end
+    it 'should save valid pay interval if one is given' do
+      controller.send(:get_pay_interval, "daily")
+      expect(controller.instance_eval { @pay_interval }).to eq("daily")
+    end
+    it 'should accept valid intervals regardless of case' do
+      controller.send(:get_pay_interval, "DAILY")
+      expect(controller.instance_eval { @pay_interval }).to eq("daily")
+    end
+    it 'should make the default interval bi-weekly if none is given' do
+      controller.send(:get_pay_interval, "")
+      expect(controller.instance_eval { @pay_interval }).to eq("bi-weekly")
+    end
+  end
 end
 
 describe PayrollCalculator do
