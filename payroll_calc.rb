@@ -22,6 +22,8 @@ class PayrollController
     # print_list_of_dates(PayrollCalculator.calculate(@start_date, @pay_interval, @payday))
   end
 
+  private
+
   def get_start_date(input_date = nil)
     puts "Is there a specific start date you want to start from? Please use the MM/DD/YYYY format."
     puts "If not, just press Enter and the start date will be today."
