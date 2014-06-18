@@ -97,4 +97,3 @@ end
 
 controller = PayrollController.new
 controller.run
-
