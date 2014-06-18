@@ -34,6 +34,13 @@ describe PayrollController do
       expect(controller.instance_eval { @start_date }).to eq(Date.today)
     end
   end
+
+  context '#invalid_date_reset' do
+    it 'should call #get_start_date' do
+      expect(controller).to receive(:get_start_date)
+      controller.send(:invalid_date_reset)
+    end
+  end
 end
 
 describe PayrollCalculator do
