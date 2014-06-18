@@ -64,6 +64,22 @@ class PayrollController
     end
     @pay_interval
   end
+
+  def get_payday(input_day = nil)
+    puts "Is there a specific day of the week you want your employees to be paid on?"
+    puts "If not, then just press Enter and it will be set to Friday."
+    puts "NOTE: Payday CANNOT be on a Saturday or Sunday."
+    input_day ||= gets.chomp!
+    input_day.downcase!
+    if ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].include? input_day
+      @payday = input_day
+    elsif input_day == ""
+      @payday = 'friday'
+    else
+      puts "I'm sorry, that was not a valid day of the week. Please try again."
+      get_payday
+    end
+  end
 end
 
 class PayrollCalculator
