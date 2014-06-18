@@ -80,6 +80,12 @@ class PayrollController
       get_payday
     end
   end
+
+  def print_list_of_dates(date_arr)
+    puts "OK, here is the list of payroll dates:"
+    puts ""
+    date_arr.each { |date| puts date; puts "" }
+  end
 end
 
 class PayrollCalculator
@@ -89,3 +95,4 @@ end
 
 controller = PayrollController.new
 controller.run
+
