@@ -47,6 +47,23 @@ class PayrollController
     puts ""
     get_start_date
   end
+
+  def get_pay_interval(input_interval = nil)
+    puts "Is there a specific pay interval you would like?"
+    puts "The accepted intervals are daily, weekly, bi-weekly, and monthly."
+    puts "If you don't have a specific interval, just press enter and it will be set to bi-weekly."
+    input_interval ||= gets.chomp!
+    input_interval.downcase!
+    if ["daily", "weekly", "bi-weekly", "monthly"].include? input_interval
+      @pay_interval = input_interval
+    elsif input_interval == ""
+      @pay_interval = "bi-weekly"
+    else
+      puts "I'm sorry, that was not a recognized pay interval. Please try again"
+      get_pay_interval
+    end
+    @pay_interval
+  end
 end
 
 class PayrollCalculator
