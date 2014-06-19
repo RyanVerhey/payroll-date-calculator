@@ -108,6 +108,46 @@ describe PayrollController do
       controller.send(:print_list_of_dates, ["07/02/2014", "08/02/2014"])
     end
   end
+
+  context "#get_holiday_file" do
+    it 'should set @holiday_filename' do
+      File.open('file.txt', 'wb') do |f|
+        f.write("test")
+      end
+      controller.send(:get_holiday_file, "yes", "file.txt")
+      expect(controller.instance_eval { @holiday_filename }).to eq("file.txt")
+      File.delete("file.txt")
+    end
+    it 'shouldn\'t set the @holiday_filename if there is no such file' do
+      controller.send(:get_holiday_file, "yes", "file.txt")
+      expect(controller.instance_eval { @holiday_filename }).to be(nil)
+    end
+    it 'shouldn\'t set the @holiday_filename if the file extension isn\'t .txt' do
+      File.open('file.rb', 'wb') do |f|
+        f.write("test")
+      end
+      controller.send(:get_holiday_file, "yes", "file.rb")
+      expect(controller.instance_eval { @holiday_filename }).to be(nil)
+      File.delete("file.rb")
+    end
+    it 'should reset if unrecognized input is given' do
+      expect(controller).to receive(:get_holiday_file)
+      controller.send(:get_holiday_file, "kjadhf", "jkadshfdsk")
+    end
+    it 'should call the help method if the user types in \'help\'' do
+      expect(controller).to receive(:help_command)
+      controller.send(:get_holiday_file, "help")
+    end
+  end
+
+  context '#help_command' do
+    it 'should return to whatever method called it' do
+      expect(controller).to receive(:get_start_date)
+      controller.send(:help_command, :get_start_date)
+      expect(controller).to receive(:get_pay_interval)
+      controller.send(:help_command, :get_pay_interval)
+    end
+  end
 end
 
 describe PayrollCalculator do
