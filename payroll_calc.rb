@@ -101,8 +101,8 @@ class PayrollController
     puts "NOTE: Payday CANNOT be on a Saturday or Sunday."
     input_day ||= gets.chomp!
     input_day.downcase!
-    if ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].include? input_day
-      @payday = input_day
+    if WEEK_DAYS.keys.include? input_day
+      @payday = WEEK_DAYS[input_day]
     elsif input_day == ""
       @payday = 'friday'
     else
