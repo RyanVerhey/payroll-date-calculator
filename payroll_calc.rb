@@ -119,7 +119,11 @@ class PayrollController
 end
 
 class PayrollCalculator
-  @@holidays = []
+  @holidays = []
+
+  class << self
+    attr_accessor :holidays
+  end
 
   def self.calculate(start_date, pay_interval, payday, months = 12)
     date_counter = start_date
