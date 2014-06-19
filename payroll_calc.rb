@@ -133,7 +133,6 @@ class PayrollCalculator
       when "monthly" then date_counter >> 1
       end
     end
-    # puts date_a rr.count
     date_arr
   end
 end
