@@ -41,6 +41,10 @@ describe PayrollController do
       controller.send(:get_start_date, "")
       expect(controller.instance_eval { @start_date }).to eq(Date.today)
     end
+    it 'should call #help_command if the user types in "help"' do
+      expect(controller).to receive(:help_command)
+      controller.send(:get_start_date, "help")
+    end
   end
 
   context '#invalid_date_reset' do
@@ -67,6 +71,10 @@ describe PayrollController do
       controller.send(:get_pay_interval, "")
       expect(controller.instance_eval { @pay_interval }).to eq("bi-weekly")
     end
+    it 'should call #help_command if the user types in "help"' do
+      expect(controller).to receive(:help_command)
+      controller.send(:get_pay_interval, "help")
+    end
   end
 
   context '#get_payday' do
@@ -85,6 +93,10 @@ describe PayrollController do
     it 'should make Friday the default if no specific day is geven' do
       controller.send(:get_payday, "")
       expect(controller.instance_eval { @payday }).to eq(5)
+    end
+    it 'should call #help_command if the user types in "help"' do
+      expect(controller).to receive(:help_command)
+      controller.send(:get_payday, "help")
     end
   end
 
