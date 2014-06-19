@@ -9,10 +9,13 @@ describe PayrollController do
   end
 
   context '#run' do
-    it 'should call #get_start_date, get_pay_interval' do
-      expect(controller).to receive(:get_start_date)
-      expect(controller).to receive(:get_pay_interval)
-      controller.run
+    it 'should call #get_start_date, #get_pay_interval, #get_payday, and #print_list_of_dates' do
+      test_controller = PayrollController.new(Date.today, "weekly", 5)
+      expect(test_controller).to receive(:get_start_date)
+      expect(test_controller).to receive(:get_pay_interval)
+      expect(test_controller).to receive(:get_payday)
+      expect(test_controller).to receive(:print_list_of_dates)
+      test_controller.run
     end
   end
 
@@ -68,15 +71,15 @@ describe PayrollController do
     end
     it 'should save the day if a valid day of the week is given' do
       controller.send(:get_payday, "Wednesday")
-      expect(controller.instance_eval { @payday }).to eq("wednesday")
+      expect(controller.instance_eval { @payday }).to eq(3)
     end
     it 'should accept valid days regardless od case' do
       controller.send(:get_payday, "ThUrSdAy")
-      expect(controller.instance_eval { @payday }).to eq("thursday")
+      expect(controller.instance_eval { @payday }).to eq(4)
     end
     it 'should make Friday the default if no specific day is geven' do
       controller.send(:get_payday, "")
-      expect(controller.instance_eval { @payday }).to eq("friday")
+      expect(controller.instance_eval { @payday }).to eq(5)
     end
   end
 
@@ -93,5 +96,25 @@ end
 describe PayrollCalculator do
   it "should be a class" do
     expect(PayrollCalculator.new).to be_an_instance_of(PayrollCalculator)
+  end
+
+  context '#calculate' do
+    it 'should return an array of formatted dates' do
+      start_date = Date.strptime('07/02/2014', '%m/%d/%Y')
+      date_arr = PayrollCalculator.calculate(start_date, "weekly", 5, 1)
+      expect(date_arr).to eq(['07/04/2014',
+                              '07/11/2014',
+                              '07/18/2014',
+                              '07/25/2014',
+                              '08/01/2014'])
+    end
+    it 'should start from the next payday if the start date is not a payday' do
+      start_date = Date.strptime('07/05/2014', '%m/%d/%Y')
+      date_arr = PayrollCalculator.calculate(start_date, "weekly", 5, 1)
+      expect(date_arr).to eq(['07/11/2014',
+                              '07/18/2014',
+                              '07/25/2014',
+                              '08/01/2014'])
+    end
   end
 end
