@@ -122,8 +122,6 @@ class PayrollController
       if File.extname(file_input) == ".txt"
         if File.file?(file_input)
           @holiday_filename = file_input
-        elsif file_input.downcase == "help"
-          help_command(__method__)
         else
           puts ""
           puts "I'm sorry, the file doesn't exist. Please move it into the following directory:"
@@ -131,6 +129,8 @@ class PayrollController
           puts ""
           get_holiday_file
         end
+      elsif file_input.downcase == "help"
+        help_command(__method__)
       else
         puts ""
         puts "I'm sorry, that file is not a recognized format. Please try again."
