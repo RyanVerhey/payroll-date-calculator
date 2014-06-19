@@ -155,7 +155,7 @@ class PayrollCalculator
   end
 
   def self.not_valid_payday?(date)
-    date.saturday? || date.sunday? || @@holidays.include?(date)
+    date.saturday? || date.sunday? || self.holidays.include?(date)
   end
 end
 
