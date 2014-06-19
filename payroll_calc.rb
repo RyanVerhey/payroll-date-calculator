@@ -39,6 +39,7 @@ class PayrollController
 
   def run
     puts "Welcome to Ryan's Payroll Calculator!"
+    puts "You can type \"help\" at any time if you need it."
     puts ""
     get_start_date
     puts ""
