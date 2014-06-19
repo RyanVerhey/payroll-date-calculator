@@ -118,7 +118,7 @@ class PayrollController
       puts "  #{File.expand_path(File.dirname(__FILE__))}."
       puts "Then, type in the filename like this: filename.txt"
       puts "The dates must be in the following format: MM/DD/YYYY."
-      file_input = gets.chomp!
+      file_input ||= gets.chomp!
       if File.extname(file_input) == ".txt"
         if File.file?(file_input)
           @holiday_filename = file_input
