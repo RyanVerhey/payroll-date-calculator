@@ -89,7 +89,9 @@ class PayrollController
     elsif input_interval == ""
       @pay_interval = "bi-weekly"
     else
+      puts ""
       puts "I'm sorry, that was not a recognized pay interval. Please try again"
+      puts ""
       get_pay_interval
     end
     @pay_interval
