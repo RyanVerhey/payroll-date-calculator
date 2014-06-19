@@ -39,6 +39,7 @@ class PayrollController
 
   def run
     puts "Welcome to Ryan's Payroll Calculator!"
+    puts "You can type \"help\" at any time if you need it."
     puts ""
     get_start_date
     puts ""
@@ -64,6 +65,8 @@ class PayrollController
       end
     elsif input_date == ""
       @start_date = Date.today
+    elsif input_date.downcase == "help"
+      help_command(__method__)
     else
       invalid_date_reset
     end
@@ -87,6 +90,8 @@ class PayrollController
       @pay_interval = input_interval
     elsif input_interval == ""
       @pay_interval = "bi-weekly"
+    elsif input_interval == "help"
+      help_command(__method__)
     else
       puts ""
       puts "I'm sorry, that was not a recognized pay interval. Please try again"
@@ -106,6 +111,8 @@ class PayrollController
       @payday = WEEK_DAYS[input_day]
     elsif input_day == ""
       @payday = 5
+    elsif input_day == "help"
+      help_command(__method__)
     else
       puts ""
       puts "I'm sorry, that was not a valid day of the week. Please try again."
@@ -118,6 +125,32 @@ class PayrollController
     puts "OK, here is the list of payroll dates:"
     puts ""
     date_arr.each { |date| puts date; puts "" }
+  end
+
+  def help_command(sender_method)
+    system('clear')
+    case sender_method
+    when :get_start_date
+      puts ""
+      puts "Please input the date you would like to start the payroll calculations from"
+      puts "using the format MM/DD/YYYY."
+      puts "For example, if you want the calculations starting from next Monday, just type"
+      puts "in #{Date.today.next_wday(1).strftime('%m/%d/%Y')}."
+      puts ""
+    when :get_pay_interval
+      puts ""
+      puts "Please input how often you would like your employees to be paid. The accepted"
+      puts "intervals are daily, weekly, bi-weekly, and monthly."
+      puts "So, if you would like your employees to be paid every week, type in \"weekly\""
+      puts ""
+    when :get_payday
+      puts ""
+      puts "Please type in the day of the week you would like your employees to be paid on."
+      puts "The accepted days are Monday, Tuesday, Wednesday, Thursday, and Friday. Weekends"
+      puts "(Saturday and Sunday) are not accepted."
+      puts ""
+    end
+    method(sender_method).call
   end
 end
 
@@ -135,11 +168,11 @@ class PayrollCalculator
     date_counter = date_counter.next_wday(payday) if date_counter.wday != payday
     date_arr = []
     until date_counter > start_date >> months
-      if self.not_valid_payday?(date_counter)
+      if self.invalid_payday?(date_counter)
         if pay_interval == "daily"
-          date_counter = date_counter.next_day until !self.not_valid_payday?(date_counter)
+          date_counter = date_counter.next_day until !self.invalid_payday?(date_counter)
         else
-          date_counter = date_counter.prev_day until !self.not_valid_payday?(date_counter)
+          date_counter = date_counter.prev_day until !self.invalid_payday?(date_counter)
         end
       else
         date_arr << date_counter.strftime('%m/%d/%Y')
@@ -151,7 +184,7 @@ class PayrollCalculator
         when "bi-weekly" then date_counter = date_counter.next_day(14)
         when "monthly" then date_counter >> 1
         end
-        if date_counter.wday != payday && !self.not_valid_payday?(date_counter)
+        if date_counter.wday != payday && !self.invalid_payday?(date_counter)
           date_counter = date_counter.next_wday(payday)
         end
       end
@@ -159,7 +192,7 @@ class PayrollCalculator
     date_arr
   end
 
-  def self.not_valid_payday?(date)
+  def self.invalid_payday?(date)
     date.saturday? || date.sunday? || self.holidays.include?(date)
   end
 end
