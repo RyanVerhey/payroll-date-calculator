@@ -149,4 +149,10 @@ describe PayrollCalculator do
       expect(date_arr[2]).to eq('07/07/2014')
     end
   end
+
+  context ".invalid_payday?" do
+    it 'should return true if the date is an invalid payday' do
+      expect(PayrollCalculator.invalid_payday?(Date.strptime('06/21/2014', '%m/%d/%Y'))).to be(true)
+    end
+  end
 end
