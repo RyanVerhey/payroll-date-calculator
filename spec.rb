@@ -112,7 +112,7 @@ describe PayrollCalculator do
   context '#calculate' do
     it 'should return an array of formatted dates' do
       start_date = Date.strptime('07/02/2014', '%m/%d/%Y')
-      date_arr = PayrollCalculator.calculate(start_date, "weekly", 5, 1)
+      date_arr = PayrollCalculator.calculate(start_date, "weekly", 5, nil, 1)
       expect(date_arr).to eq(['07/04/2014',
                               '07/11/2014',
                               '07/18/2014',
@@ -121,7 +121,7 @@ describe PayrollCalculator do
     end
     it 'should start from the next payday if the start date is not a payday' do
       start_date = Date.strptime('07/05/2014', '%m/%d/%Y')
-      date_arr = PayrollCalculator.calculate(start_date, "weekly", 5, 1)
+      date_arr = PayrollCalculator.calculate(start_date, "weekly", 5, nil, 1)
       expect(date_arr).to eq(['07/11/2014',
                               '07/18/2014',
                               '07/25/2014',
@@ -129,21 +129,21 @@ describe PayrollCalculator do
     end
     it 'should move on to the next day if the pay interval is daily and the date is not a valid payday' do
       start_date = Date.strptime('07/04/2014', '%m/%d/%Y')
-      date_arr = PayrollCalculator.calculate(start_date, "daily", start_date.wday, 1)
+      date_arr = PayrollCalculator.calculate(start_date, "daily", start_date.wday, nil, 1)
       expect(date_arr[0]).to eq('07/04/2014')
       expect(date_arr[1]).to eq('07/07/2014')
     end
     it 'should move to the next day if pay interval is daily and the day is a holiday' do
       start_date = Date.strptime('06/23/2014', '%m/%d/%Y')
       PayrollCalculator.holidays = [Date.strptime('06/24/2014', '%m/%d/%Y')]
-      date_arr = PayrollCalculator.calculate(start_date, "daily", start_date.wday, 1)
+      date_arr = PayrollCalculator.calculate(start_date, "daily", start_date.wday, nil, 1)
       expect(date_arr[0]).to eq('06/23/2014')
       expect(date_arr[1]).to eq('06/25/2014')
     end
     it 'should return to regular payday schedule if payday lands on a holiday or weekend' do
       start_date = Date.strptime('06/23/2014', '%m/%d/%Y')
       PayrollCalculator.holidays = [Date.strptime('06/30/2014', '%m/%d/%Y')]
-      date_arr = PayrollCalculator.calculate(start_date, "weekly", start_date.wday, 2)
+      date_arr = PayrollCalculator.calculate(start_date, "weekly", start_date.wday, nil, 2)
       expect(date_arr[0]).to eq('06/23/2014')
       expect(date_arr[1]).to eq('06/27/2014')
       expect(date_arr[2]).to eq('07/07/2014')
