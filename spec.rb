@@ -3,6 +3,7 @@ require_relative 'payroll_calc'
 
 describe PayrollController do
   let(:controller) { PayrollController.new }
+  let(:test_controller) { PayrollController.new(Date.today, "weekly", 5) }
 
   it "should be a class" do
     expect(PayrollController.new).to be_an_instance_of(PayrollController)
@@ -10,7 +11,6 @@ describe PayrollController do
 
   context '#run' do
     it 'should call #get_start_date, #get_pay_interval, #get_payday, and #print_list_of_dates' do
-      test_controller = PayrollController.new(Date.today, "weekly", 5)
       expect(test_controller).to receive(:get_start_date)
       expect(test_controller).to receive(:get_pay_interval)
       expect(test_controller).to receive(:get_payday)
