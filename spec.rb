@@ -221,3 +221,40 @@ describe PayrollCalculator do
     end
   end
 end
+
+describe Date do # The methods I extended the Date library with
+  context '#this_week' do
+    it 'should find the Sunday of the week that the given date is in (weeks start on Sunday)' do
+      date = Date.strptime("07/02/2014", '%m/%d/%Y')
+      expect(date.this_week).to eq(Date.strptime("06/29/2014", '%m/%d/%Y'))
+    end
+  end
+
+  context '#next_week' do
+    it 'should find the date of the Sunday that starts the next week' do
+      date = Date.strptime("07/02/2014", '%m/%d/%Y')
+      expect(date.next_week).to eq(Date.strptime("07/06/2014", '%m/%d/%Y'))
+    end
+  end
+
+  context '#next_wday' do
+    it 'should find the next given weekday' do
+      date = Date.strptime("07/02/2014", '%m/%d/%Y')
+      expect(date.next_wday(2)).to eq(Date.strptime("07/08/2014", '%m/%d/%Y'))
+    end
+  end
+
+  context '#last_week' do
+    it 'should find the date of the Sunday that starts the previous week' do
+      date = Date.strptime("07/02/2014", '%m/%d/%Y')
+      expect(date.last_week).to eq(Date.strptime("06/22/2014", '%m/%d/%Y'))
+    end
+  end
+
+  context '#last_wday' do
+    it 'should find the last given weekday' do
+      date = Date.strptime("07/02/2014", '%m/%d/%Y')
+      expect(date.last_wday(5)).to eq(Date.strptime("06/27/2014", '%m/%d/%Y'))
+    end
+  end
+end
