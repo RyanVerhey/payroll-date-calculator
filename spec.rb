@@ -10,10 +10,11 @@ describe PayrollController do
   end
 
   context '#run' do
-    it 'should call #get_start_date, #get_pay_interval, #get_payday, and #print_list_of_dates' do
+    it 'should call #get_start_date, #get_pay_interval, #get_payday, #get_holiday_file, and #print_list_of_dates' do
       expect(test_controller).to receive(:get_start_date)
       expect(test_controller).to receive(:get_pay_interval)
       expect(test_controller).to receive(:get_payday)
+      expect(test_controller).to receive(:get_holiday_file)
       expect(test_controller).to receive(:print_list_of_dates)
       test_controller.run
     end
