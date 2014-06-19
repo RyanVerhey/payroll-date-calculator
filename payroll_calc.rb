@@ -65,6 +65,8 @@ class PayrollController
       end
     elsif input_date == ""
       @start_date = Date.today
+    elsif input_date.downcase == "help"
+      help_command(__method__)
     else
       invalid_date_reset
     end
@@ -88,6 +90,8 @@ class PayrollController
       @pay_interval = input_interval
     elsif input_interval == ""
       @pay_interval = "bi-weekly"
+    elsif input_interval == "help"
+      help_command(__method__)
     else
       puts ""
       puts "I'm sorry, that was not a recognized pay interval. Please try again"
@@ -107,6 +111,8 @@ class PayrollController
       @payday = WEEK_DAYS[input_day]
     elsif input_day == ""
       @payday = 5
+    elsif input_day == "help"
+      help_command(__method__)
     else
       puts ""
       puts "I'm sorry, that was not a valid day of the week. Please try again."
