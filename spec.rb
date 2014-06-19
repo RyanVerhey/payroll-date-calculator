@@ -155,4 +155,16 @@ describe PayrollCalculator do
       expect(PayrollCalculator.invalid_payday?(Date.strptime('06/21/2014', '%m/%d/%Y'))).to be(true)
     end
   end
+
+  context ".import_holidays" do
+    it 'should import dates from a file' do
+      PayrollCalculator.holidays = []
+      File.open("tmp.txt", "wb") do |f|
+        f.write("07/02/2014\n07/03/2014")
+      end
+      PayrollCalculator.import_holidays("tmp.txt")
+      expect(PayrollCalculator.holidays).to eq([Date.strptime("07/02/2014", '%m/%d/%Y'), Date.strptime("07/03/2014", '%m/%d/%Y')])
+      File.delete("tmp.txt")
+    end
+  end
 end
