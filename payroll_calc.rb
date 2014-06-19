@@ -208,7 +208,7 @@ class PayrollCalculator
     attr_accessor :holidays
   end
 
-  def self.calculate(start_date, pay_interval, payday, months = 12)
+  def self.calculate(start_date, pay_interval, payday, holiday_filename, months = 12)
     date_counter = start_date
     date_counter = date_counter.next_wday(payday) if date_counter.wday != payday
     date_arr = []
