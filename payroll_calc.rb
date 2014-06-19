@@ -101,7 +101,7 @@ class PayrollController
     end
   end
 
-  def get_holiday_file(input = nil)
+  def get_holiday_file(input = nil, file_input = nil)
     puts "Would you like to pass in a .txt file with holidays? If you do, and a"
     puts "payday lands on that holiday, the payday for that interval will be moved"
     puts "to the first valid payday before the holiday."
