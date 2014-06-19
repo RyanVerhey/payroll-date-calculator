@@ -29,10 +29,10 @@ class Date
 end
 
 class PayrollController
-  def initialize
-    @start_date = nil
-    @pay_interval = nil
-    @payday = nil
+  def initialize(start_date = nil, pay_interval = nil, payday = nil)
+    @start_date = start_date
+    @pay_interval = pay_interval
+    @payday = payday
   end
 
   def run
