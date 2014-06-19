@@ -1,5 +1,11 @@
 require 'date'
 
+WEEK_DAYS = { "monday" => 1,
+              "tuesday" => 2,
+              "wednesday" => 3,
+              "thursday" => 4,
+              "friday" => 5 }
+
 class PayrollController
   def initialize
     @start_date = nil
