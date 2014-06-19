@@ -212,6 +212,9 @@ class PayrollCalculator
     date_counter = start_date
     date_counter = date_counter.next_wday(payday) if date_counter.wday != payday
     date_arr = []
+    if holiday_filename
+      self.import_holidays(holiday_filename)
+    end
     until date_counter > start_date >> months
       if self.invalid_payday?(date_counter)
         if pay_interval == "daily"
