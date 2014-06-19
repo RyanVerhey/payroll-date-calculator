@@ -94,4 +94,24 @@ describe PayrollCalculator do
   it "should be a class" do
     expect(PayrollCalculator.new).to be_an_instance_of(PayrollCalculator)
   end
+
+  context '#calculate' do
+    it 'should return an array of formatted dates' do
+      start_date = Date.strptime('07/02/2014', '%m/%d/%Y')
+      date_arr = PayrollCalculator.calculate(start_date, "weekly", 5, 1)
+      expect(date_arr).to eq(['07/04/2014',
+                              '07/11/2014',
+                              '07/18/2014',
+                              '07/25/2014',
+                              '08/01/2014'])
+    end
+    it 'should start from the next payday if the start date is not a payday' do
+      start_date = Date.strptime('07/05/2014', '%m/%d/%Y')
+      date_arr = PayrollCalculator.calculate(start_date, "weekly", 5, 1)
+      expect(date_arr).to eq(['07/11/2014',
+                              '07/18/2014',
+                              '07/25/2014',
+                              '08/01/2014'])
+    end
+  end
 end
