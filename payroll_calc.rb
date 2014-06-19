@@ -248,7 +248,7 @@ class PayrollCalculator
     File.open(file_path, "r") do |file|
       file.each_line do |line|
         begin
-          self.holidays << Date.strptime(line, '%m/%d/%Y')
+          self.holidays << Date.strptime(line.strip, '%m/%d/%Y')
         rescue
           puts "invalid date" # Do same thing as get start date
         end
