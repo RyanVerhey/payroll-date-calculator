@@ -104,7 +104,7 @@ class PayrollController
     if WEEK_DAYS.keys.include? input_day
       @payday = WEEK_DAYS[input_day]
     elsif input_day == ""
-      @payday = 'friday'
+      @payday = 5
     else
       puts "I'm sorry, that was not a valid day of the week. Please try again."
       get_payday
