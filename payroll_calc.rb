@@ -168,11 +168,11 @@ class PayrollCalculator
     date_counter = date_counter.next_wday(payday) if date_counter.wday != payday
     date_arr = []
     until date_counter > start_date >> months
-      if self.not_valid_payday?(date_counter)
+      if self.invalid_payday?(date_counter)
         if pay_interval == "daily"
-          date_counter = date_counter.next_day until !self.not_valid_payday?(date_counter)
+          date_counter = date_counter.next_day until !self.invalid_payday?(date_counter)
         else
-          date_counter = date_counter.prev_day until !self.not_valid_payday?(date_counter)
+          date_counter = date_counter.prev_day until !self.invalid_payday?(date_counter)
         end
       else
         date_arr << date_counter.strftime('%m/%d/%Y')
@@ -184,7 +184,7 @@ class PayrollCalculator
         when "bi-weekly" then date_counter = date_counter.next_day(14)
         when "monthly" then date_counter >> 1
         end
-        if date_counter.wday != payday && !self.not_valid_payday?(date_counter)
+        if date_counter.wday != payday && !self.invalid_payday?(date_counter)
           date_counter = date_counter.next_wday(payday)
         end
       end
@@ -192,7 +192,7 @@ class PayrollCalculator
     date_arr
   end
 
-  def self.not_valid_payday?(date)
+  def self.invalid_payday?(date)
     date.saturday? || date.sunday? || self.holidays.include?(date)
   end
 end
