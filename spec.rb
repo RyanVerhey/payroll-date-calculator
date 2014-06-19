@@ -109,7 +109,7 @@ describe PayrollCalculator do
     expect(PayrollCalculator.holidays.first).to eq(1)
   end
 
-  context '#calculate' do
+  context '.calculate' do
     it 'should return an array of formatted dates' do
       start_date = Date.strptime('07/02/2014', '%m/%d/%Y')
       date_arr = PayrollCalculator.calculate(start_date, "weekly", 5, nil, 1)
