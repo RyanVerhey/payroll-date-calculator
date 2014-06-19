@@ -120,6 +120,32 @@ class PayrollController
     puts ""
     date_arr.each { |date| puts date; puts "" }
   end
+
+  def help_command(sender_method)
+    system('clear')
+    case sender_method
+    when :get_start_date
+      puts ""
+      puts "Please input the date you would like to start the payroll calculations from"
+      puts "using the format MM/DD/YYYY."
+      puts "For example, if you want the calculations starting from next Monday, just type"
+      puts "in #{Date.today.next_wday(1).strftime('%m/%d/%Y')}."
+      puts ""
+    when :get_pay_interval
+      puts ""
+      puts "Please input how often you would like your employees to be paid. The accepted"
+      puts "intervals are daily, weekly, bi-weekly, and monthly."
+      puts "So, if you would like your employees to be paid every week, type in \"weekly\""
+      puts ""
+    when :get_payday
+      puts ""
+      puts "Please type in the day of the week you would like your employees to be paid on."
+      puts "The accepted days are Monday, Tuesday, Wednesday, Thursday, and Friday. Weekends"
+      puts "(Saturday and Sunday) arenot accepted."
+      puts ""
+    end
+    method(sender_method).call
+  end
 end
 
 
