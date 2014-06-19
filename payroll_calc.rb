@@ -136,6 +136,10 @@ class PayrollCalculator
     end
     date_arr
   end
+
+  def self.not_valid_payday?(date)
+    date.saturday? || date.sunday? || @@holidays.include?(date)
+  end
 end
 
 controller = PayrollController.new
