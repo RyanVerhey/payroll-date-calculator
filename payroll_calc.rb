@@ -48,7 +48,9 @@ class PayrollController
     puts ""
     @pay_interval == "daily" ? @payday = @start_date.wday : get_payday
     puts ""
-    date_arr = PayrollCalculator.calculate(@start_date, @pay_interval, @payday)
+    get_holiday_file
+    puts ""
+    date_arr = PayrollCalculator.calculate(@start_date, @pay_interval, @payday, @holiday_filename)
     print_list_of_dates(date_arr)
   end
 
