@@ -28,6 +28,8 @@ class Date
   end
 end
 
+
+
 class PayrollController
   def initialize(start_date = nil, pay_interval = nil, payday = nil)
     @start_date = start_date
@@ -117,6 +119,8 @@ class PayrollController
     date_arr.each { |date| puts date; puts "" }
   end
 end
+
+
 
 class PayrollCalculator
   @holidays = []
