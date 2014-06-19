@@ -124,6 +124,48 @@ class PayrollController
     end
   end
 
+  def get_holiday_file(input = nil)
+    puts "Would you like to pass in a .txt file with holidays? If you do, and a"
+    puts "payday lands on that holiday, the payday for that interval will be moved"
+    puts "to the first valid payday before the holiday."
+    puts "If yes, type 'yes'."
+    puts "If you don't want to pass in a file, just press Enter."
+    input ||= gets.chomp!
+    if input.downcase == "help"
+      help_command(__method__)
+    elsif input == ""
+      #nothing
+    elsif input.downcase == "yes"
+      puts "Each date has to be on a new line."
+      puts "If you want to pass in a file, put it in the following directory:"
+      puts "  #{File.expand_path(File.dirname(__FILE__))}."
+      puts "Then, type in the filename like this: filename.txt"
+      file_input = gets.chomp!
+      if File.extname(file_input) == ".txt"
+        if File.file?(file_input)
+          @holiday_filename = file_input
+        else
+          puts ""
+          puts "I'm sorry, the file doesn't exist. Please move it into the following directory:"
+          puts "  #{File.expand_path(File.dirname(__FILE__))}"
+          puts ""
+          get_holiday_file
+        end
+      else
+        puts ""
+        puts "I'm sorry, that file is not a recognized format. Please try again."
+        puts ""
+        get_holiday_file
+      end
+    else
+      puts ""
+      puts "I'm sorry, your input was not recognized. Please try again."
+      puts ""
+      get_holiday_file
+    end
+    @holiday_filename
+  end
+
   def print_list_of_dates(date_arr)
     puts "OK, here is the list of payroll dates:"
     puts ""
