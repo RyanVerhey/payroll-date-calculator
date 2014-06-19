@@ -147,7 +147,7 @@ class PayrollController
       puts ""
       puts "Please type in the day of the week you would like your employees to be paid on."
       puts "The accepted days are Monday, Tuesday, Wednesday, Thursday, and Friday. Weekends"
-      puts "(Saturday and Sunday) arenot accepted."
+      puts "(Saturday and Sunday) are not accepted."
       puts ""
     end
     method(sender_method).call
