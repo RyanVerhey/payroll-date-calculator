@@ -251,11 +251,10 @@ class PayrollCalculator
         begin
           self.holidays << Date.strptime(line.strip, '%m/%d/%Y')
         rescue
-          puts "invalid date" # Do same thing as get start date
+          puts "There was an invalid holiday date: #{line.strip}. It was ignored."
         end
       end
     end
-    puts self.holidays.inspect
   end
 end
 
