@@ -28,6 +28,8 @@ class Date
   end
 end
 
+
+
 class PayrollController
   def initialize(start_date = nil, pay_interval = nil, payday = nil)
     @start_date = start_date
@@ -39,15 +41,13 @@ class PayrollController
     puts "Welcome to Ryan's Payroll Calculator!"
     puts ""
     get_start_date
-    # puts @start_date
     puts ""
     get_pay_interval
-    # puts @pay_interval
     puts ""
-    get_payday
-    # puts @payday
+    @pay_interval == "daily" ? @payday = @start_date.wday : get_payday
     puts ""
-    print_list_of_dates(PayrollCalculator.calculate(@start_date, @pay_interval, @payday))
+    date_arr = PayrollCalculator.calculate(@start_date, @pay_interval, @payday)
+    print_list_of_dates(date_arr)
   end
 
   private
@@ -88,7 +88,9 @@ class PayrollController
     elsif input_interval == ""
       @pay_interval = "bi-weekly"
     else
+      puts ""
       puts "I'm sorry, that was not a recognized pay interval. Please try again"
+      puts ""
       get_pay_interval
     end
     @pay_interval
@@ -105,7 +107,9 @@ class PayrollController
     elsif input_day == ""
       @payday = 5
     else
+      puts ""
       puts "I'm sorry, that was not a valid day of the week. Please try again."
+      puts ""
       get_payday
     end
   end
@@ -117,23 +121,46 @@ class PayrollController
   end
 end
 
+
+
 class PayrollCalculator
-  @@holidays = []
+  @holidays = []
+
+  class << self
+    attr_accessor :holidays
+  end
 
   def self.calculate(start_date, pay_interval, payday, months = 12)
     date_counter = start_date
     date_counter = date_counter.next_wday(payday) if date_counter.wday != payday
     date_arr = []
     until date_counter > start_date >> months
-      date_arr << date_counter.strftime('%m/%d/%Y')
-      case pay_interval
-      when "daily" then date_counter = date_counter.next_day(1)
-      when "weekly" then date_counter = date_counter.next_day(7)
-      when "bi-weekly" then date_counter = date_counter.next_day(14)
-      when "monthly" then date_counter >> 1
+      if self.not_valid_payday?(date_counter)
+        if pay_interval == "daily"
+          date_counter = date_counter.next_day until !self.not_valid_payday?(date_counter)
+        else
+          date_counter = date_counter.prev_day until !self.not_valid_payday?(date_counter)
+        end
+      else
+        date_arr << date_counter.strftime('%m/%d/%Y')
+        case pay_interval
+        when "daily"
+          date_counter = date_counter.next_day
+          payday = date_counter.wday
+        when "weekly" then date_counter = date_counter.next_day(7)
+        when "bi-weekly" then date_counter = date_counter.next_day(14)
+        when "monthly" then date_counter >> 1
+        end
+        if date_counter.wday != payday && !self.not_valid_payday?(date_counter)
+          date_counter = date_counter.next_wday(payday)
+        end
       end
     end
     date_arr
+  end
+
+  def self.not_valid_payday?(date)
+    date.saturday? || date.sunday? || self.holidays.include?(date)
   end
 end
 
