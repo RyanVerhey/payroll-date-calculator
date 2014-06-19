@@ -174,6 +174,15 @@ class PayrollController
       puts "The accepted days are Monday, Tuesday, Wednesday, Thursday, and Friday. Weekends"
       puts "(Saturday and Sunday) are not accepted."
       puts ""
+    when :get_holiday_file
+      puts ""
+      puts "If you want to pass in a text file with holidays in it, type yes."
+      puts "Then, put that file in the same directory as this script, which is:"
+      puts "  #{File.expand_path(File.dirname(__FILE__))}"
+      puts "Then, type in the file's name, for example, filename.txt"
+      puts "The dates in the file must be on separate lines, like:\n#{Date.today.strftime('%m/%d/%Y')}\n#{Date.today.next_day.strftime('%m/%d/%Y')}"
+      puts "If a date is not recognized, it will be ignored. The date format is MM/DD/YYYY."
+      puts ""
     end
     method(sender_method).call
   end
