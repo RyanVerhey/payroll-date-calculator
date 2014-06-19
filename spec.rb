@@ -101,6 +101,13 @@ describe PayrollCalculator do
   it "should be a class" do
     expect(PayrollCalculator.new).to be_an_instance_of(PayrollCalculator)
   end
+  it 'should have a readable @holidays variable' do
+    expect(PayrollCalculator.holidays).to eq([])
+  end
+  it 'should have a writable @holidays variable' do
+    PayrollCalculator.holidays << 1
+    expect(PayrollCalculator.holidays.first).to eq(1)
+  end
 
   context '#calculate' do
     it 'should return an array of formatted dates' do
