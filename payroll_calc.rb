@@ -108,7 +108,9 @@ class PayrollController
     elsif input_day == ""
       @payday = 5
     else
+      puts ""
       puts "I'm sorry, that was not a valid day of the week. Please try again."
+      puts ""
       get_payday
     end
   end
