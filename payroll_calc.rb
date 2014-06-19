@@ -195,7 +195,22 @@ class PayrollCalculator
   def self.invalid_payday?(date)
     date.saturday? || date.sunday? || self.holidays.include?(date)
   end
+
+  def self.import_holidays(file_path)
+    File.open(file_path, "r") do |file|
+      file.each_line do |line|
+        begin
+          self.holidays << Date.strptime(line, '%m/%d/%Y')
+        rescue
+          puts "invalid date" # Do same thing as get start date
+        end
+      end
+    end
+    puts self.holidays.inspect
+  end
 end
 
 controller = PayrollController.new
 controller.run
+
+# PayrollCalculator.import_holidays("dates.txt")
