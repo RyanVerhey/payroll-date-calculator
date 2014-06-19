@@ -42,11 +42,7 @@ class PayrollController
     puts ""
     get_pay_interval
     puts ""
-    if @pay_interval != "daily"
-      get_payday
-    else
-      @payday = @start_date.wday
-    end
+    @pay_interval == "daily" ? @payday = @start_date.wday : get_payday
     puts ""
     print_list_of_dates(PayrollCalculator.calculate(@start_date, @pay_interval, @payday))
   end
