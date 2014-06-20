@@ -11,7 +11,7 @@ describe "Payroll Date Calculator" do
 
   describe PayrollController do
     let(:controller) { PayrollController.new }
-    let(:test_controller) { PayrollController.new(Date.today, "weekly", 5) }
+    let(:controller_with_params) { PayrollController.new(Date.today, "weekly", 5) }
 
     it "should be a class" do
       expect(PayrollController.new).to be_an_instance_of(PayrollController)
@@ -19,17 +19,17 @@ describe "Payroll Date Calculator" do
 
     context '#run' do
       it 'should call #load_settings_prompt and #print_list_of_dates' do
-        expect(test_controller).to receive(:load_settings_prompt)
-        expect(test_controller).to receive(:print_list_of_dates)
-        test_controller.run
+        expect(controller_with_params).to receive(:load_settings_prompt)
+        expect(controller_with_params).to receive(:print_list_of_dates)
+        controller_with_params.run
       end
     end
 
     context '#load_settings_prompt' do
       it 'should run #prompts if no .settings file is present' do
         File.delete(".settings")
-        expect(test_controller).to receive(:prompts)
-        test_controller.send(:load_settings_prompt)
+        expect(controller_with_params).to receive(:prompts)
+        controller_with_params.send(:load_settings_prompt)
       end
       it 'should run #load_settings if a .settings file is present and the user wants to load settings' do
         settings = { start_date: Date.strptime("07/08/2014", '%m/%d/%Y'),
@@ -62,11 +62,11 @@ describe "Payroll Date Calculator" do
 
     context '#prompts' do
       it 'should call #get_start_date, #get_pay_interval, #get_payday, and #get_holiday_file' do
-        expect(test_controller).to receive(:get_start_date)
-        expect(test_controller).to receive(:get_pay_interval)
-        expect(test_controller).to receive(:get_payday)
-        expect(test_controller).to receive(:get_holiday_file)
-        test_controller.send(:prompts )
+        expect(controller_with_params).to receive(:get_start_date)
+        expect(controller_with_params).to receive(:get_pay_interval)
+        expect(controller_with_params).to receive(:get_payday)
+        expect(controller_with_params).to receive(:get_holiday_file)
+        controller_with_params.send(:prompts )
       end
     end
 
