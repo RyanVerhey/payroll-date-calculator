@@ -23,10 +23,6 @@ describe "Payroll Date Calculator" do
         expect(test_controller).to receive(:print_list_of_dates)
         test_controller.run
       end
-      it 'shouldn\'t call #get_payday if the interval is "daily".' do
-        test_controller = PayrollController.new(Date.today, "daily", 5)
-        expect(test_controller).not_to receive(:get_payday)
-      end
     end
 
     context '#load_settings_prompt' do
