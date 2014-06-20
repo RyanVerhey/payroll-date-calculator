@@ -126,11 +126,12 @@ class PayrollController
     puts "If yes, type 'yes'."
     puts "If you don't want to pass in a file, just press Enter."
     input ||= gets.chomp!
-    if input.downcase == "help"
+    case input.downcase
+    when "help"
       help_command(__method__)
-    elsif input == ""
+    when ""
       #nothing
-    elsif input.downcase == "yes"
+    when "yes"
       puts "Each date has to be on a new line."
       puts "If you want to pass in a file, put it in the following directory:"
       puts "  #{File.expand_path(File.dirname(__FILE__))}."
