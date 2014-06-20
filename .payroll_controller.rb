@@ -132,6 +132,7 @@ class PayrollController
     when ""
       #nothing
     when "yes"
+      puts ""
       puts "Each date has to be on a new line."
       puts "If you want to pass in a file, put it in the following directory:"
       puts "  #{File.expand_path(File.dirname(__FILE__))}."
