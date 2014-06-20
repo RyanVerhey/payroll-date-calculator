@@ -1,13 +1,3 @@
-require 'date'
-require 'yaml'
-require_relative 'date_extension'
-
-WEEK_DAYS = { "monday" => 1,
-              "tuesday" => 2,
-              "wednesday" => 3,
-              "thursday" => 4,
-              "friday" => 5 }
-
 class PayrollController
   def initialize(start_date = nil, pay_interval = nil, payday = nil, holiday_filename = nil)
     @start_date = start_date
@@ -37,8 +27,8 @@ class PayrollController
       settings_input ||= gets.downcase.chomp!
       case settings_input
       when "yes" then load_settings
-      when ""    then prompts
-      when "no"  then prompts
+      when ""    then prompt_for_input
+      when "no"  then prompt_for_input
       else
         puts ""
         puts "I'm sorry, that's not a recognized input. Please try again."
@@ -46,11 +36,11 @@ class PayrollController
         load_settings_prompt
       end
     else
-      prompts
+      prompt_for_input
     end
   end
 
-  def prompts
+  def prompt_for_input
     get_start_date
     puts ""
     get_pay_interval
@@ -136,16 +126,18 @@ class PayrollController
     puts "If yes, type 'yes'."
     puts "If you don't want to pass in a file, just press Enter."
     input ||= gets.chomp!
-    if input.downcase == "help"
+    case input.downcase
+    when "help"
       help_command(__method__)
-    elsif input == ""
+    when ""
       #nothing
-    elsif input.downcase == "yes"
+    when "yes"
+      puts ""
       puts "Each date has to be on a new line."
       puts "If you want to pass in a file, put it in the following directory:"
       puts "  #{File.expand_path(File.dirname(__FILE__))}."
-      puts "Then, type in the filename like this: filename.txt"
       puts "The dates must be in the following format: MM/DD/YYYY."
+      puts "Type in the filename like this: filename.txt"
       file_input ||= gets.chomp!
       if File.extname(file_input) == ".txt"
         if File.file?(file_input)
@@ -235,66 +227,3 @@ class PayrollController
     method(sender_method).call
   end
 end
-
-
-
-class PayrollCalculator
-  @holidays = []
-
-  class << self
-    attr_accessor :holidays
-  end
-
-  def self.calculate(start_date, pay_interval, payday, holiday_filename, months = 12)
-    date_counter = start_date
-    date_counter = date_counter.next_wday(payday) if date_counter.wday != payday
-    date_arr = []
-    if holiday_filename
-      self.import_holidays(holiday_filename)
-    end
-    until date_counter > start_date >> months
-      if self.invalid_payday?(date_counter)
-        if pay_interval == "daily"
-          date_counter = date_counter.next_day until !self.invalid_payday?(date_counter)
-        else
-          date_counter = date_counter.prev_day until !self.invalid_payday?(date_counter)
-        end
-      else
-        date_arr << date_counter.strftime('%m/%d/%Y')
-        case pay_interval
-        when "daily"
-          date_counter = date_counter.next_day
-          payday = date_counter.wday
-        when "weekly" then date_counter = date_counter.next_day(7)
-        when "bi-weekly" then date_counter = date_counter.next_day(14)
-        when "monthly" then date_counter >> 1
-        end
-        if date_counter.wday != payday && !self.invalid_payday?(date_counter)
-          date_counter = date_counter.next_wday(payday)
-        end
-      end
-    end
-    date_arr
-  end
-
-  def self.invalid_payday?(date)
-    date.saturday? || date.sunday? || self.holidays.include?(date)
-  end
-
-  def self.import_holidays(file_path)
-    File.open(file_path, "r") do |file|
-      file.each_line do |line|
-        begin
-          self.holidays << Date.strptime(line.strip, '%m/%d/%Y')
-        rescue
-          puts "There was an invalid holiday date: #{line.strip}. It was ignored."
-        end
-      end
-    end
-  end
-end
-
-controller = PayrollController.new
-controller.run
-
-# PayrollCalculator.import_holidays("dates.txt")
