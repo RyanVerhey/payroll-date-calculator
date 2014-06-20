@@ -21,6 +21,40 @@ describe PayrollController do
     end
   end
 
+  context '#load_settings_prompt' do
+    it 'should run #prompts if no .settings file is present' do
+      File.delete(".settings")
+      expect(test_controller).to receive(:prompts)
+      test_controller.send(:load_settings_prompt)
+    end
+    it 'should run #load_settings if a .settings file is present and the user wants to load settings' do
+      settings = { start_date: Date.strptime("07/08/2014", '%m/%d/%Y'),
+                   pay_interval: 'monthly',
+                   payday: 5,
+                   holiday_filename: nil }
+      File.open(".settings", "wb") do |file|
+        file.write(settings.to_yaml)
+      end
+
+      expect(controller).to receive(:load_settings)
+      controller.send(:load_settings_prompt, "yes")
+      File.delete(".settings")
+    end
+    it 'should run prompts if a .settings file exists and the user does not want to load settings' do
+      settings = { start_date: Date.strptime("07/08/2014", '%m/%d/%Y'),
+                   pay_interval: 'monthly',
+                   payday: 5,
+                   holiday_filename: nil }
+      File.open(".settings", "wb") do |file|
+        file.write(settings.to_yaml)
+      end
+
+      expect(controller).not_to receive(:load_settings)
+      expect(controller).to receive(:prompts)
+      controller.send(:load_settings_prompt, "no")
+      File.delete(".settings")
+    end
+  end
   context '#get_start_date' do
     it 'should reset if invalid date format is passed' do
       expect(controller).to receive(:invalid_date_reset)
