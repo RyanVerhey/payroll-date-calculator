@@ -2,12 +2,6 @@ require 'date'
 require 'yaml'
 require_relative 'date_extension'
 
-WEEK_DAYS = { "monday" => 1,
-              "tuesday" => 2,
-              "wednesday" => 3,
-              "thursday" => 4,
-              "friday" => 5 }
-
 class PayrollController
   def initialize(start_date = nil, pay_interval = nil, payday = nil, holiday_filename = nil)
     @start_date = start_date
