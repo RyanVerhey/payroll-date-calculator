@@ -1,4 +1,5 @@
 require 'date'
+require 'yaml'
 require_relative 'date_extension'
 
 WEEK_DAYS = { "monday" => 1,
@@ -19,6 +20,37 @@ class PayrollController
     puts "Welcome to Ryan's Payroll Calculator!"
     puts "You can type \"help\" at any time if you need it."
     puts ""
+    load_settings_prompt
+    date_arr = PayrollCalculator.calculate(@start_date, @pay_interval, @payday, @holiday_filename)
+    print_list_of_dates(date_arr)
+    save_settings
+  end
+
+  private
+
+  def load_settings_prompt(settings_input = nil)
+    if File.file?(".settings")
+      puts "You have run this script before."
+      puts "Would you like to run this script again with the same settings?"
+      puts "Typing 'yes' will run the script with the inputs you used before,"
+      puts "and typing 'no' or just pressing Enter will let you run this script normally."
+      settings_input ||= gets.downcase.chomp!
+      case settings_input
+      when "yes" then load_settings
+      when ""    then prompts
+      when "no"  then prompts
+      else
+        puts ""
+        puts "I'm sorry, that's not a recognized input. Please try again."
+        puts ""
+        load_settings_prompt
+      end
+    else
+      prompts
+    end
+  end
+
+  def prompts
     get_start_date
     puts ""
     get_pay_interval
@@ -27,11 +59,7 @@ class PayrollController
     puts ""
     get_holiday_file
     puts ""
-    date_arr = PayrollCalculator.calculate(@start_date, @pay_interval, @payday, @holiday_filename)
-    print_list_of_dates(date_arr)
   end
-
-  private
 
   def get_start_date(input_date = nil)
     puts "Is there a specific start date you want to start from? Please use the MM/DD/YYYY format."
@@ -150,6 +178,26 @@ class PayrollController
     puts "OK, here is the list of payroll dates:"
     puts ""
     date_arr.each { |date| puts date; puts "" }
+  end
+
+  def save_settings
+    settings = { start_date: @start_date,
+                 pay_interval: @pay_interval,
+                 payday: @payday,
+                 holiday_filename: @holiday_filename }
+    File.open(".settings", "wb") do |file|
+      file.write(settings.to_yaml)
+    end
+  end
+
+  def load_settings
+    File.open(".settings", "r") do |file|
+      settings          = YAML.load(file.read)
+      @start_date       = settings[:start_date]
+      @pay_interval     = settings[:pay_interval]
+      @payday           = settings[:payday]
+      @holiday_filename = settings[:holiday_filename]
+    end
   end
 
   def help_command(sender_method)
