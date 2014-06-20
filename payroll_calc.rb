@@ -1,4 +1,5 @@
 require 'date'
+require_relative 'date_extension'
 
 WEEK_DAYS = { "monday" => 1,
               "tuesday" => 2,
@@ -6,35 +7,12 @@ WEEK_DAYS = { "monday" => 1,
               "thursday" => 4,
               "friday" => 5 }
 
-class Date
-  def this_week
-    self - self.wday
-  end
-
-  def next_week
-    self + (7 - self.wday)
-  end
-
-  def next_wday(n)
-    n > self.wday ? self + (n - self.wday) : self.next_week.next_day(n)
-  end
-
-  def last_week
-    self.this_week - 7
-  end
-
-  def last_wday(n)
-    n < self.wday ? self - (self.wday - n) : self.last_week.next_day(n)
-  end
-end
-
-
-
 class PayrollController
-  def initialize(start_date = nil, pay_interval = nil, payday = nil)
+  def initialize(start_date = nil, pay_interval = nil, payday = nil, holiday_filename = nil)
     @start_date = start_date
     @pay_interval = pay_interval
     @payday = payday
+    @holiday_filename = holiday_filename
   end
 
   def run
@@ -47,7 +25,9 @@ class PayrollController
     puts ""
     @pay_interval == "daily" ? @payday = @start_date.wday : get_payday
     puts ""
-    date_arr = PayrollCalculator.calculate(@start_date, @pay_interval, @payday)
+    get_holiday_file
+    puts ""
+    date_arr = PayrollCalculator.calculate(@start_date, @pay_interval, @payday, @holiday_filename)
     print_list_of_dates(date_arr)
   end
 
@@ -121,6 +101,51 @@ class PayrollController
     end
   end
 
+  def get_holiday_file(input = nil, file_input = nil)
+    puts "Would you like to pass in a .txt file with holidays? If you do, and a"
+    puts "payday lands on that holiday, the payday for that interval will be moved"
+    puts "to the first valid payday before the holiday."
+    puts "If yes, type 'yes'."
+    puts "If you don't want to pass in a file, just press Enter."
+    input ||= gets.chomp!
+    if input.downcase == "help"
+      help_command(__method__)
+    elsif input == ""
+      #nothing
+    elsif input.downcase == "yes"
+      puts "Each date has to be on a new line."
+      puts "If you want to pass in a file, put it in the following directory:"
+      puts "  #{File.expand_path(File.dirname(__FILE__))}."
+      puts "Then, type in the filename like this: filename.txt"
+      puts "The dates must be in the following format: MM/DD/YYYY."
+      file_input ||= gets.chomp!
+      if File.extname(file_input) == ".txt"
+        if File.file?(file_input)
+          @holiday_filename = file_input
+        else
+          puts ""
+          puts "I'm sorry, the file doesn't exist. Please move it into the following directory:"
+          puts "  #{File.expand_path(File.dirname(__FILE__))}"
+          puts ""
+          get_holiday_file
+        end
+      elsif file_input.downcase == "help"
+        help_command(__method__)
+      else
+        puts ""
+        puts "I'm sorry, that file is not a recognized format. Please try again."
+        puts ""
+        get_holiday_file
+      end
+    else
+      puts ""
+      puts "I'm sorry, your input was not recognized. Please try again."
+      puts ""
+      get_holiday_file
+    end
+    @holiday_filename
+  end
+
   def print_list_of_dates(date_arr)
     puts "OK, here is the list of payroll dates:"
     puts ""
@@ -149,6 +174,15 @@ class PayrollController
       puts "The accepted days are Monday, Tuesday, Wednesday, Thursday, and Friday. Weekends"
       puts "(Saturday and Sunday) are not accepted."
       puts ""
+    when :get_holiday_file
+      puts ""
+      puts "If you want to pass in a text file with holidays in it, type yes."
+      puts "Then, put that file in the same directory as this script, which is:"
+      puts "  #{File.expand_path(File.dirname(__FILE__))}"
+      puts "Then, type in the file's name, for example, filename.txt"
+      puts "The dates in the file must be on separate lines, like:\n#{Date.today.strftime('%m/%d/%Y')}\n#{Date.today.next_day.strftime('%m/%d/%Y')}"
+      puts "If a date is not recognized, it will be ignored. The date format is MM/DD/YYYY."
+      puts ""
     end
     method(sender_method).call
   end
@@ -163,10 +197,13 @@ class PayrollCalculator
     attr_accessor :holidays
   end
 
-  def self.calculate(start_date, pay_interval, payday, months = 12)
+  def self.calculate(start_date, pay_interval, payday, holiday_filename, months = 12)
     date_counter = start_date
     date_counter = date_counter.next_wday(payday) if date_counter.wday != payday
     date_arr = []
+    if holiday_filename
+      self.import_holidays(holiday_filename)
+    end
     until date_counter > start_date >> months
       if self.invalid_payday?(date_counter)
         if pay_interval == "daily"
@@ -195,7 +232,21 @@ class PayrollCalculator
   def self.invalid_payday?(date)
     date.saturday? || date.sunday? || self.holidays.include?(date)
   end
+
+  def self.import_holidays(file_path)
+    File.open(file_path, "r") do |file|
+      file.each_line do |line|
+        begin
+          self.holidays << Date.strptime(line.strip, '%m/%d/%Y')
+        rescue
+          puts "There was an invalid holiday date: #{line.strip}. It was ignored."
+        end
+      end
+    end
+  end
 end
 
 controller = PayrollController.new
 controller.run
+
+# PayrollCalculator.import_holidays("dates.txt")
