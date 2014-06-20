@@ -1,4 +1,5 @@
 require 'date'
+require 'yaml'
 require_relative 'date_extension'
 
 WEEK_DAYS = { "monday" => 1,
