@@ -1,7 +1,3 @@
-require 'date'
-require 'yaml'
-require_relative 'date_extension'
-
 class PayrollController
   def initialize(start_date = nil, pay_interval = nil, payday = nil, holiday_filename = nil)
     @start_date = start_date
