@@ -136,8 +136,8 @@ class PayrollController
       puts "Each date has to be on a new line."
       puts "If you want to pass in a file, put it in the following directory:"
       puts "  #{File.expand_path(File.dirname(__FILE__))}."
-      puts "Then, type in the filename like this: filename.txt"
       puts "The dates must be in the following format: MM/DD/YYYY."
+      puts "Type in the filename like this: filename.txt"
       file_input ||= gets.chomp!
       if File.extname(file_input) == ".txt"
         if File.file?(file_input)
