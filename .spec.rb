@@ -26,9 +26,9 @@ describe "Payroll Date Calculator" do
     end
 
     context '#load_settings_prompt' do
-      it 'should run #prompts if no .settings file is present' do
+      it 'should run #prompt_for_input if no .settings file is present' do
         File.delete(".settings")
-        expect(controller_with_params).to receive(:prompts)
+        expect(controller_with_params).to receive(:prompt_for_input)
         controller_with_params.send(:load_settings_prompt)
       end
       it 'should run #load_settings if a .settings file is present and the user wants to load settings' do
@@ -44,7 +44,7 @@ describe "Payroll Date Calculator" do
         controller.send(:load_settings_prompt, "yes")
         File.delete(".settings")
       end
-      it 'should run prompts if a .settings file exists and the user does not want to load settings' do
+      it 'should run prompt_for_input if a .settings file exists and the user does not want to load settings' do
         settings = { start_date: Date.strptime("07/08/2014", '%m/%d/%Y'),
                      pay_interval: 'monthly',
                      payday: 5,
@@ -54,19 +54,19 @@ describe "Payroll Date Calculator" do
         end
 
         expect(controller).not_to receive(:load_settings)
-        expect(controller).to receive(:prompts)
+        expect(controller).to receive(:prompt_for_input)
         controller.send(:load_settings_prompt, "no")
         File.delete(".settings")
       end
     end
 
-    context '#prompts' do
+    context '#prompt_for_input' do
       it 'should call #get_start_date, #get_pay_interval, #get_payday, and #get_holiday_file' do
         expect(controller_with_params).to receive(:get_start_date)
         expect(controller_with_params).to receive(:get_pay_interval)
         expect(controller_with_params).to receive(:get_payday)
         expect(controller_with_params).to receive(:get_holiday_file)
-        controller_with_params.send(:prompts )
+        controller_with_params.send(:prompt_for_input )
       end
     end
 

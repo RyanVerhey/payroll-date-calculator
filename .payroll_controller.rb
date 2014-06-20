@@ -27,8 +27,8 @@ class PayrollController
       settings_input ||= gets.downcase.chomp!
       case settings_input
       when "yes" then load_settings
-      when ""    then prompts
-      when "no"  then prompts
+      when ""    then prompt_for_input
+      when "no"  then prompt_for_input
       else
         puts ""
         puts "I'm sorry, that's not a recognized input. Please try again."
@@ -36,11 +36,11 @@ class PayrollController
         load_settings_prompt
       end
     else
-      prompts
+      prompt_for_input
     end
   end
 
-  def prompts
+  def prompt_for_input
     get_start_date
     puts ""
     get_pay_interval
