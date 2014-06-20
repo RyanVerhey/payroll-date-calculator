@@ -55,6 +55,17 @@ describe PayrollController do
       File.delete(".settings")
     end
   end
+
+  context '#prompts' do
+    it 'should call #get_start_date, #get_pay_interval, #get_payday, and #get_holiday_file' do
+      expect(test_controller).to receive(:get_start_date)
+      expect(test_controller).to receive(:get_pay_interval)
+      expect(test_controller).to receive(:get_payday)
+      expect(test_controller).to receive(:get_holiday_file)
+      test_controller.send(:prompts)
+    end
+  end
+
   context '#get_start_date' do
     it 'should reset if invalid date format is passed' do
       expect(controller).to receive(:invalid_date_reset)
