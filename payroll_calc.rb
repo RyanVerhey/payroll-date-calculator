@@ -180,6 +180,15 @@ class PayrollController
     date_arr.each { |date| puts date; puts "" }
   end
 
+  def save_settings
+    settings = { start_date: @start_date,
+                 pay_interval: @pay_interval,
+                 payday: @payday,
+                 holiday_filename: @holiday_filename }
+    File.open(".settings", "wb") do |file|
+      file.write(settings.to_yaml)
+    end
+  end
   def help_command(sender_method)
     system('clear')
     case sender_method
