@@ -20,7 +20,11 @@ ruby run_script.rb
 Then follow the instructions. If you need help, you can type <code>help</code> at any time.
 
 ### Running Tests
-If you want to run my RSpec tests for this script, simply enter this in Terminal in the same directory the script is installed in:
+Before you run the tests, you need to have the RSpec gem installed. To do install it, type the following text in Terminal:
+```
+gem install rspec
+```
+Now that RSpec is installed, to run the tests for this script, simply enter this in Terminal in the same directory the script is installed in:
 ```
 rspec .spec.rb
 ```
