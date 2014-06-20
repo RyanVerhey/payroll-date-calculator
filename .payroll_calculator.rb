@@ -287,8 +287,3 @@ class PayrollCalculator
     end
   end
 end
-
-controller = PayrollController.new
-controller.run
-
-# PayrollCalculator.import_holidays("dates.txt")
