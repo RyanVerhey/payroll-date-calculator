@@ -189,6 +189,17 @@ class PayrollController
       file.write(settings.to_yaml)
     end
   end
+
+  def load_settings
+    File.open(".settings", "r") do |file|
+      settings          = YAML.load(file.read)
+      @start_date       = settings[:start_date]
+      @pay_interval     = settings[:pay_interval]
+      @payday           = settings[:payday]
+      @holiday_filename = settings[:holiday_filename]
+    end
+  end
+
   def help_command(sender_method)
     system('clear')
     case sender_method
