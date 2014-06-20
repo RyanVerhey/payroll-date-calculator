@@ -1,5 +1,5 @@
 require 'rspec'
-require_relative 'run'
+require_relative 'run_script'
 
 
 describe "Payroll Date Calculator" do
